@@ -54,6 +54,7 @@ function erlang_compiler#AutoRun(buffer)
         compiler erlang
         let &l:makeprg = fnameescape(g:erlang_compiler_check_script) . ' ' .
                        \ erlang_compiler#GetFlymakeOptions()
+        echomsg "AutoRun makeprg:" &l:makeprg
         if !g:erlang_quickfix_support
             setlocal shellpipe=>
             execute "silent lmake!" shellescape(bufname(a:buffer), 1)
@@ -77,15 +78,18 @@ function erlang_compiler#GetFlymakeOptions()
             break
         endif
     endfor
+    echomsg "GetFlymakeOptions flymake_options:" flymake_options
     return flymake_options
 endfunction
 
 function erlang_compiler#GetLocalInfo()
+    echomsg "GetLocalInfo makeprg:" &l:makeprg
     return [get(b:, 'current_compiler', ''), &l:makeprg, &l:efm, &l:shellpipe]
 endfunction
 
 function erlang_compiler#SetLocalInfo(info)
     let [name, &l:makeprg, &l:efm, &l:shellpipe] = a:info
+    echomsg "SetLocalInfo makeprg:" &l:makeprg
     if empty(name)
         unlet! b:current_compiler
     else
